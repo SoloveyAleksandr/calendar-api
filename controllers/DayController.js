@@ -13,20 +13,18 @@ function DayController() {
     const query = req.query;
     const dateIsActual = Number(query.year) > 0;
 
-    const netDate = async () => {
-      if (!dateIsActual) {
-        const query = await axios.get('http://worldclockapi.com/api/json/est/now');
-        const data = query.data;
-        return data;
-      } else {
-        return 2022;
-      }
+    const getNetDate = async () => {
+      const query = await axios.get('http://worldclockapi.com/api/json/est/now');
+      const data = query.data.currentDateTime;
+      return data;
     };
 
-    const year = dateIsActual ? query.year : moment(netDate.currentDateTime).year();
+    const netDate = await getNetDate();
+
+    const year = dateIsActual ? query.year : moment(netDate).year();
     const month = dateIsActual ?
       query.month > 2 ? query.month : `0${query.month}`
-      : moment(netDate.currentDateTime).month() + 1;
+      : Number(moment(netDate).month()) + 1;
 
     const startOfWeek = moment(`01.${month}.${year}`, 'DD.MM.YYYY').startOf('month').startOf('week').subtract(1, 'day');
     const calendarDays = [...Array(42)].map(() => {
@@ -40,7 +38,7 @@ function DayController() {
 
       const isPrevMonth = (isNextMonth === false && dayMonth !== Number(month)) ? true : false;
 
-      const isToday = moment().format('DD.MM.YYYY') === dayFormat ? true : false;
+      const isToday = moment(netDate).format('DD.MM.YYYY') === dayFormat ? true : false;
       return {
         date: {
           full: day.format('x'),
