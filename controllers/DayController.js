@@ -13,16 +13,20 @@ function DayController() {
     const query = req.query;
     const dateIsActual = Number(query.year) > 0;
 
-    // if (!dateIsActual) {
-    //   const netDateRes = await axios.get('http://worldclockapi.com/api/json/est/now');
-    //   const netDate = netDateRes.data;
-    //   console.log(netDate);
-    // }
+    const netDate = async () => {
+      if (!dateIsActual) {
+        const query = await axios.get('http://worldclockapi.com/api/json/est/now');
+        const data = query.data;
+        return data;
+      } else {
+        return 2022;
+      }
+    };
 
-    const year = dateIsActual ? query.year : moment().year();
+    const year = dateIsActual ? query.year : moment(netDate.currentDateTime).year();
     const month = dateIsActual ?
       query.month > 2 ? query.month : `0${query.month}`
-      : moment().format('DD.MM.YYYY').slice(3, 5);
+      : moment(netDate.currentDateTime).month() + 1;
 
     const startOfWeek = moment(`01.${month}.${year}`, 'DD.MM.YYYY').startOf('month').startOf('week').subtract(1, 'day');
     const calendarDays = [...Array(42)].map(() => {
