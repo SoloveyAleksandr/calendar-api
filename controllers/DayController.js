@@ -1,4 +1,5 @@
 const moment = require('moment');
+const axios = require('axios');
 
 moment.updateLocale('en', {
   week: {
@@ -8,13 +9,19 @@ moment.updateLocale('en', {
 
 function DayController() {
 
-  this.getNumberOfDays = (req, res) => {
+  this.getNumberOfDays = async (req, res) => {
     const query = req.query;
     const dateIsActual = Number(query.year) > 0;
 
-    const year = dateIsActual ? query.year.slice(1) : moment().year();
+    // if (!dateIsActual) {
+    //   const netDateRes = await axios.get('http://worldclockapi.com/api/json/est/now');
+    //   const netDate = netDateRes.data;
+    //   console.log(netDate);
+    // }
+
+    const year = dateIsActual ? query.year : moment().year();
     const month = dateIsActual ?
-      query.month.length > 2 ? query.month.slice(1) : `0${query.month.slice(1)}`
+      query.month > 2 ? query.month : `0${query.month}`
       : moment().format('DD.MM.YYYY').slice(3, 5);
 
     const startOfWeek = moment(`01.${month}.${year}`, 'DD.MM.YYYY').startOf('month').startOf('week').subtract(1, 'day');
