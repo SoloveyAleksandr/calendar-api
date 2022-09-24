@@ -1,0 +1,28 @@
+{
+  "name": "solo-nails-rest-api",
+  "version": "1.0.0",
+  "description": "REST API for solo_nails",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "author": "Aleksandr Solovei",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.1",
+    "fs-extra": "^10.1.0",
+    "moment": "^2.29.3",
+    "requests": "^0.3.0",
+    "solo_nails": "file:../app",
+    "solo_nails_app": "file:..",
+    "uuid": "^8.3.2"
+  }
+}
